@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
+
+    <th:block th:fragment="content">
+
+        <h1 class="mt-4">GuestBook Modify Page</h1>
+
+        <form action="/guestbook/modify" method="post">
+
+            <!-- 페이지 번호 / 검색 타입 / 검색어 hidden -->
+            <input type="hidden" name="page" th:value="${requestDTO.page}">
+            <input type="hidden" name="type" th:value="${requestDTO.type}">
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
+
+            <div class="form-group">
+                <label >Gno</label>
+                <input type="text" class="form-control" name="gno" th:value="${dto.gno}" readonly >
+            </div>
+
+            <div class="form-group">
+                <label >Title</label>>
+                <input type="text" class="form-control" name="title" th:value="${dto.title}" >
+            </div>
+
+            <div class="form-group">
+                <label >Content</label>
+                <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
+            </div>
+
+            <div class="form-group">
+                <label >Writer</label>
+                <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label >RegDate</label>
+                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label >ModDate</label>
+                <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+
+        </form>
+
+        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+        <button type="button" class="btn btn-info listBtn">List</button>
+        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+
+        <script th:inline="javascript">
+            var actionFrom = $("form"); //<form></form>
+
+            $(".modifyBtn").click(function (){
+               if(!confirm("수정하시겠습니까?")){   //confrim(): 자바스크립트 함수 (Yes, No) 버튼
+                   return;
+               }
+               actionFrom.attr("action", "/guestbook/modify").attr("method", "post").submit();
+            });
+
+            $(".listBtn").click(function (){
+               var pageInfo = $("input[name='page']");
+               var type = $("input[name='type']");
+               var keyword = $("input[name='keyword']");
+
+               actionFrom.empty();  //<form></form> 내부의 모든 내용 지우기
+                actionFrom.append(pageInfo);    //목록으로 이동 시 필요한 내용만 주기
+                actionFrom.append(type);
+                actionFrom.append(keyword);
+
+                actionFrom.attr("action","/guestbook/list").attr("method","get");
+                actionFrom.submit();
+            });
+
+            $(".removeBtn").click(function (){
+               actionFrom.attr("action","/guestbook/remove").attr("method","post").submit();
+            });
+
+        </script>
+
+    </th:block>
+
+</th:block>
