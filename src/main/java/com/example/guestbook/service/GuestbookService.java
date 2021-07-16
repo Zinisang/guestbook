@@ -23,7 +23,7 @@ public interface GuestbookService {
     // 삭제 관련
     void remove(Long gno);
 
-    // DTO -> Entity
+    // DTO -> Entity45
     default GuestBook dtoToEntity(GuestbookDTO dto) {
         GuestBook entity = GuestBook.builder()
                 .gno(dto.getGno())
